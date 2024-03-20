@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
+import org.testng.asserts.SoftAssert;
 
 import java.io.File;
 
@@ -16,6 +17,7 @@ public class TestUtil {
     protected WebDriver driver;
     protected static WebDriverWait wait;
     protected static JavascriptExecutor executor;
+    protected static SoftAssert softAssert;
 
     @BeforeTest
     @Parameters("browser")
@@ -35,6 +37,7 @@ public class TestUtil {
         driver.manage().window().maximize();
         TestUtil.wait = new WebDriverWait(driver, 5);
         TestUtil.executor = (JavascriptExecutor) driver;
+        TestUtil.softAssert = new SoftAssert();
     }
     @AfterClass
     public void tearDown(){

@@ -9,7 +9,6 @@ import org.testng.annotations.Test;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class HolidayPageTests extends TestUtil{
 
@@ -43,7 +42,7 @@ public class HolidayPageTests extends TestUtil{
         WebElement expensiveOfferPrice = expensiveOffer.findElement(By.xpath(offerPricesXpathExpression));
 
         Double expensivePrice = Double.parseDouble(expensiveOfferPrice.getText().replaceAll("[^0-9.]", ""));
-        Assert.assertEquals(expensivePrice, Collections.max(offerFilteredPrices));
+        softAssert.assertEquals(expensivePrice, Collections.max(offerFilteredPrices));
         System.out.println("Most expensive offer: " + Collections.max(offerFilteredPrices) + "₾");
     }
 
@@ -75,7 +74,7 @@ public class HolidayPageTests extends TestUtil{
         WebElement cheapestOfferPrice = cheapestOffer.findElement(By.xpath(offerPricesXpathExpression));
 
         Double cheapPrice = Double.parseDouble(cheapestOfferPrice.getText().replaceAll("[^0-9.]", ""));
-        Assert.assertEquals(cheapPrice, Collections.min(offerFilteredPrices));
+        softAssert.assertEquals(cheapPrice, Collections.min(offerFilteredPrices));
         System.out.println("Least expensive offer: " + Collections.min(offerFilteredPrices) + "₾");
     }
 
@@ -115,7 +114,43 @@ public class HolidayPageTests extends TestUtil{
         WebElement cheapestOfferPrice = cheapestOffer.findElement(By.xpath(offerPricesXpathExpression));
         // Validate that the least expensive offer is displayed first in the list.
         Double cheapPrice = Double.parseDouble(cheapestOfferPrice.getText().replaceAll("[^0-9.]", ""));
-        Assert.assertEquals(cheapPrice, Collections.min(offerFilteredPrices));
-        System.out.println("Least expensive offer: " + Collections.min(offerFilteredPrices) + "₾");
+        softAssert.assertEquals(cheapPrice, Collections.min(offerFilteredPrices));
+    }
+
+    @Test
+    public void priceRangeTest(){
+        driver.get("https://www.swoop.ge/");
+        WebElement categoryRestButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='Menus']//a[@href='/category/24/dasveneba']")));
+        categoryRestButton.click();
+
+        WebElement minPriceInput = driver.findElement(By.xpath("//div[@class='category-filter-desk']//input[@name='minprice']"));
+        WebElement maxPriceInput = driver.findElement(By.xpath("//div[@class='category-filter-desk']//input[@name='maxprice']"));
+        WebElement submitButton = driver.findElement(By.xpath("//div[@class='category-filter-desk']//div[@class='submit-button']"));
+
+        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", minPriceInput);
+
+        minPriceInput.click();
+        minPriceInput.sendKeys("45");
+
+        maxPriceInput.click();
+        maxPriceInput.sendKeys("55");
+
+        submitButton.click();
+
+        String offerPricesXpathExpression = "//div[@class='discounted-prices']/child::p[1]";
+
+        if (driver instanceof FirefoxDriver) {
+            // Apply Firefox-specific waits
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(offerPricesXpathExpression)));
+        } else {
+            // Apply generic waits for other browsers
+            wait.until(ExpectedConditions.stalenessOf(driver.findElement(By.xpath(offerPricesXpathExpression))));
+        }
+
+        List<WebElement> offerPrices = driver.findElements(By.xpath(offerPricesXpathExpression));
+        List<Double> offerFilteredPrices = offerListUtil.extractPrices(offerPrices);
+        for(Double offer : offerFilteredPrices){
+            softAssert.assertTrue(offer > 45 && offer < 55, "target prices are not within range.");
+        }
     }
 }
