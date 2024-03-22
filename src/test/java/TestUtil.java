@@ -5,10 +5,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Parameters;
+import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 
 import java.io.File;
@@ -18,8 +17,9 @@ public class TestUtil {
     protected static WebDriverWait wait;
     protected static JavascriptExecutor executor;
     protected static SoftAssert softAssert;
+    protected static Actions actions;
 
-    @BeforeTest
+    @BeforeClass
     @Parameters("browser")
     public void setUp(String browser){
         if (browser.equalsIgnoreCase("chrome")){
@@ -38,7 +38,13 @@ public class TestUtil {
         TestUtil.wait = new WebDriverWait(driver, 5);
         TestUtil.executor = (JavascriptExecutor) driver;
         TestUtil.softAssert = new SoftAssert();
+        TestUtil.actions = new Actions(driver);
     }
+//    @AfterTest
+//    public void doSoftAssert(){
+//        softAssert.assertAll();
+//    }
+
     @AfterClass
     public void tearDown(){
         driver.close();

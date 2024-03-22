@@ -3,10 +3,13 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
 <suite name="TestSuite" thread-count="1" parallel="tests">
+
     <test name="ChromeTest">
         <parameter name="browser" value="Chrome"/>
         <classes>
             <class name="HolidayPageTests"/>
+            <class name="LandingPageTests"/>
+            <class name="MoviePageTests"/>
         </classes>
     </test>
 
@@ -14,6 +17,8 @@
         <parameter name="browser" value="Firefox"/>
         <classes>
             <class name="HolidayPageTests"/>
+            <class name="LandingPageTests"/>
+            <class name="MoviePageTests"/>
         </classes>
     </test>
 
@@ -21,6 +26,8 @@
         <parameter name="browser" value="Edge"/>
         <classes>
             <class name="HolidayPageTests"/>
+            <class name="LandingPageTests"/>
+            <class name="MoviePageTests"/>
         </classes>
     </test>
 </suite>
