@@ -1,10 +1,10 @@
 import ge.tbcitacademy.util.ItemListsUtil;
 import ge.tbcitacademy.util.DriverWaitUtil;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -12,107 +12,104 @@ import java.util.List;
 
 public class HolidayPageTests extends TestUtil{
 
-    @Test
-    public void descendingOrderTest() {
-        driver.get("https://www.swoop.ge/");
-
+    @Test(priority = 1)
+    public void descendingOrderTest() throws ElementClickInterceptedException {
         // Go to 'დასვენება' section.
         WebElement categoryRestButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='Menus']//a[@href='/category/24/dasveneba']")));
         categoryRestButton.click();
-
-        // sort offers from most expensive to least expensive.
+        // sort offers from most expensive to least expensive on the website.
         Select sortSelector = new Select(driver.findElement(By.id("sort")));
         sortSelector.getOptions();
         sortSelector.selectByValue("1");
 
         String offerPricesXpathExpression = "//div[@class='discounted-prices']/child::p[1]"; // can be sent in Constants
-
+        // wait until all elements are updated after applying filter
         DriverWaitUtil.applyWaitXpath(driver, wait, offerPricesXpathExpression);
+        // find most expensive item and get price and turn into String for Assert.
+        WebElement expensiveOfferPrice = driver.findElement(By.xpath(offerPricesXpathExpression));
+        String expensivePriceText = expensiveOfferPrice.getText().replaceAll("[^0-9.]", "");
+        Double expensivePriceDouble = Double.parseDouble(expensivePriceText);
 
-        // get all offer prices, filter them and turn into Double to perform actions
-        List<WebElement> offerPrices = driver.findElements(By.xpath(offerPricesXpathExpression));
-        List<Double> offerFilteredPrices = ItemListsUtil.extractPrices(offerPrices);
-        // find most expensive item and get price, turn into double, so we can compare to our collections most expensive item
-        WebElement expensiveOffer = driver.findElement(By.xpath("//section[@class='container deal-container category-offers ']/child::div[1]"));
-        WebElement expensiveOfferPrice = expensiveOffer.findElement(By.xpath(offerPricesXpathExpression));
+        String nextPageElementXpathExpression = "//a[@class='pagination__link']/img[@src='/Images/NewDesigneImg/categoryIn/arrow-01.png']";
 
-        Double expensivePrice = Double.parseDouble(expensiveOfferPrice.getText().replaceAll("[^0-9.]", ""));
-        softAssert.assertEquals(expensivePrice, Collections.max(offerFilteredPrices), "expensive price does not match target price");
-        System.out.println("Most expensive offer: " + Collections.max(offerFilteredPrices) + "₾");
-        softAssert.assertAll();
+        List<Double> allOfferPrices = ItemListsUtil.fetchAllOfferPrices(driver, wait, offerPricesXpathExpression, nextPageElementXpathExpression);
+        // Print or process the most expensive offer
+        System.out.println("Most expensive offer: " + Collections.max(allOfferPrices) + "₾");
+        softAssert.assertEquals(expensivePriceDouble, Collections.max(allOfferPrices), "Most expensive offer is not displayed in : [descendingOrderTest]");
     }
 
-    @Test
+    @Test(priority = 2)
     public void ascendingOrderTest() {
-        driver.get("https://www.swoop.ge/");
+        // scroll at the top of page to access Dropdown menu
+        executor.executeScript("window.scrollTo(0, 0);");
         // Go to 'დასვენება' section.
         WebElement categoryRestButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='Menus']//a[@href='/category/24/dasveneba']")));
         categoryRestButton.click();
-        // sort offers from most expensive to least expensive.
+        // sort offers from most expensive to least expensive on the website.
         Select sortSelector = new Select(driver.findElement(By.id("sort")));
         sortSelector.getOptions();
         sortSelector.selectByValue("2");
 
         String offerPricesXpathExpression = "//div[@class='discounted-prices']/child::p[1]"; // can be sent in Constants
-
+        // wait until all elements are updated after applying filter
         DriverWaitUtil.applyWaitXpath(driver, wait, offerPricesXpathExpression);
+        // find most expensive item and get price and turn into String for Assert.
+        WebElement cheapOfferPrice = driver.findElement(By.xpath(offerPricesXpathExpression));
+        String cheapPrice = cheapOfferPrice.getText().replaceAll("[^0-9.]", "");
+        Double cheapPriceDouble = Double.parseDouble(cheapPrice);
 
+        String nextPageElementXpathExpression = "//a[@class='pagination__link']/img[@src='/Images/NewDesigneImg/categoryIn/arrow-01.png']";
         // get all offer prices, filter them and turn into Double to perform actions
-        List<WebElement> offerPrices = driver.findElements(By.xpath(offerPricesXpathExpression));
-        List<Double> offerFilteredPrices = ItemListsUtil.extractPrices(offerPrices);
-        // find most expensive item and get price, turn into double, so we can compare to our collections most expensive item
-        WebElement cheapestOffer = driver.findElement(By.xpath("//section[@class='container deal-container category-offers ']/child::div[1]"));
-        WebElement cheapestOfferPrice = cheapestOffer.findElement(By.xpath(offerPricesXpathExpression));
-
-        Double cheapPrice = Double.parseDouble(cheapestOfferPrice.getText().replaceAll("[^0-9.]", ""));
-        softAssert.assertEquals(cheapPrice, Collections.min(offerFilteredPrices), "cheapest price does not match target price");
-        System.out.println("Least expensive offer: " + Collections.min(offerFilteredPrices) + "₾");
-        softAssert.assertAll();
+        List<Double> allOfferPrices = ItemListsUtil.fetchAllOfferPrices(driver,wait,offerPricesXpathExpression, nextPageElementXpathExpression);
+        System.out.println("Least Expensive offer: " + Collections.min(allOfferPrices) + "₾");
+        softAssert.assertEquals(cheapPriceDouble, Collections.min(allOfferPrices), "Least expensive offer is not displayed 1st in : [ascendingOrderTest]");
     }
 
-    @Test
+    @Test(priority = 3)
     public void filterTest(){
-        driver.get("https://www.swoop.ge/");
+        // scroll at the top of page to access Dropdown menu
+        executor.executeScript("window.scrollTo(0, 0);");
         WebElement categoryRestButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='Menus']//a[@href='/category/24/dasveneba']")));
         categoryRestButton.click();
 
         WebElement cottageCheckbox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='category-filter-desk']//label[contains(text(),'კოტეჯი')]/input")));
         cottageCheckbox.click();
 
-        String cottageCss = "div.special-offer-title a[href*=koteji]:last-child";
+        String cottageXpath = "//div[@class='special-offer-title']//a[contains(@href, 'koteji')]";
+        String word = "koteji";
 
-        DriverWaitUtil.applyWaitCssPath(driver, wait, cottageCss);
-
-        List<WebElement> offersWithCottage = driver.findElements(By.cssSelector(cottageCss));
-        for (WebElement offer : offersWithCottage){
-            String offerAttribute = offer.getAttribute("href");
-            if(offerAttribute.contains("koteji")){
-                return;
-            }else {
-                Assert.fail("All offers do not include target word" + offerAttribute);
-            }
-        }
-        // sort offers from most expensive to least expensive.
+        //sort offers from most expensive to least expensive.
         Select sortSelector = new Select(driver.findElement(By.id("sort")));
         sortSelector.getOptions();
         sortSelector.selectByValue("2");
 
         String offerPricesXpathExpression = "//div[@class='discounted-prices']/child::p[1]";
+        DriverWaitUtil.applyWaitXpath(driver, wait, cottageXpath);
+        String updatedOfferXpath = "//div[@class='discounted-prices']/child::p[1]";
         // get all offer prices, filter them and turn into Double to perform actions
-        List<WebElement> offerPrices = driver.findElements(By.xpath(offerPricesXpathExpression));
-        List<Double> offerFilteredPrices = ItemListsUtil.extractPrices(offerPrices);
-        // find most expensive item and get price, turn into double, so we can compare to our collections most expensive item
-        WebElement cheapestOffer = driver.findElement(By.xpath("//section[@class='container deal-container category-offers ']/child::div[1]"));
-        WebElement cheapestOfferPrice = cheapestOffer.findElement(By.xpath(offerPricesXpathExpression));
-        // Validate that the least expensive offer is displayed first in the list.
-        Double cheapPrice = Double.parseDouble(cheapestOfferPrice.getText().replaceAll("[^0-9.]", ""));
-        softAssert.assertEquals(cheapPrice, Collections.min(offerFilteredPrices));
-        softAssert.assertAll();
+        WebElement cheapOfferPrice = driver.findElement(By.xpath(updatedOfferXpath));
+        String cheapPrice = cheapOfferPrice.getText().replaceAll("[^0-9.]", "");
+        Double cheapPriceDouble = Double.parseDouble(cheapPrice);
+
+        String nextPageElementXpathExpression = "//a[@class='pagination__link']/img[@src='/Images/NewDesigneImg/categoryIn/arrow-01.png']";
+
+        // get offers that contain "koteji" with appropriate assertion
+        List<String> allOffersContainWord = ItemListsUtil.verifyAllOffersContainWord(driver, wait, cottageXpath, nextPageElementXpathExpression, word);
+        for(String string : allOffersContainWord){
+            softAssert.assertTrue(string.contains("koteji"), "String does not contain the word 'koteji': " + string + "[filterTest]");
+        }
+        // start from first page to collect offer prices.
+        driver.findElement(By.xpath("//a[@class='pagination__link']/img[@src='/Images/NewDesigneImg/categoryIn/arrows2-04.png']")).click();
+        // get all offer prices, filter them and turn into Double to perform actions
+        List<Double> allOfferPrices = ItemListsUtil.fetchAllOfferPrices(driver,wait,offerPricesXpathExpression, nextPageElementXpathExpression);
+        System.out.println("Least Expensive offer: " + Collections.min(allOfferPrices) + "₾");
+        softAssert.assertEquals(cheapPriceDouble, Collections.min(allOfferPrices), "Least expensive offer is not displayed 1st in : [filterTest]");
     }
 
-    @Test
+    @Test(priority = 4)
     public void priceRangeTest(){
-        driver.get("https://www.swoop.ge/");
+        // scroll at the top of page to access Dropdown menu
+        executor.executeScript("window.scrollTo(0, 0);");
         WebElement categoryRestButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='Menus']//a[@href='/category/24/dasveneba']")));
         categoryRestButton.click();
 
@@ -137,8 +134,7 @@ public class HolidayPageTests extends TestUtil{
         List<WebElement> offerPrices = driver.findElements(By.xpath(offerPricesXpathExpression));
         List<Double> offerFilteredPrices = ItemListsUtil.extractPrices(offerPrices);
         for(Double offer : offerFilteredPrices){
-            softAssert.assertTrue(offer >= 45 && offer <= 55, "target prices are not within range.");
+            softAssert.assertTrue(offer >= 45 && offer <= 55, "target prices are not within range : [priceRangeTest]");
         }
-        softAssert.assertAll();
     }
 }

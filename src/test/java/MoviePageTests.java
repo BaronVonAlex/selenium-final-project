@@ -1,3 +1,4 @@
+import ge.tbcitacademy.util.DriverWaitUtil;
 import ge.tbcitacademy.util.ItemListsUtil;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -7,19 +8,15 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 public class MoviePageTests extends TestUtil{
-    @Test
+    @Test(priority = 7)
     public void movieTest() throws ElementClickInterceptedException {
-        driver.get("https://www.swoop.ge/");
         WebElement movieEventButton = driver.findElement(By.xpath("//div[@class='Menus']//a[@href='/events']"));
         movieEventButton.click();
         WebElement firstMovieElement = driver.findElement(By.xpath("//div[@class='movies-deal'][1]/a"));
         // hover mouse over movie to display buy option
-        actions.moveToElement(firstMovieElement).perform();
-        String movieLink = firstMovieElement.getAttribute("href");
-        String filteredLink = movieLink.substring(movieLink.indexOf("ge") + 2).replace('/', '\\');
-        // search for buy option with link that we got from URL and then proceed to buy page.
-        WebElement buyHoverButton = driver.findElement(By.xpath("//div[@class='cinema-hover']/a[@href='" + filteredLink + "']"));
-        buyHoverButton.click();
+        actions.moveToElement(firstMovieElement).build().perform();
+        driver.findElement(By.xpath("//div[@class='movies-deal'][1]")).click();
+
         // find Cavea option and check that only Cavea options are returned.
         WebElement caveaButton = driver.findElement(By.xpath("//div[@class='container choose-seanse']//a[contains(text(),'კავეა ისთ ფოინ')]"));
         executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", caveaButton);
@@ -105,6 +102,5 @@ public class MoviePageTests extends TestUtil{
         WebElement emailErrorMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-error-email")));
         String ErrorMessageText = emailErrorMsg.getText();
         softAssert.assertEquals(ErrorMessageText, "ჩაწერე ელფოსტა");
-        softAssert.assertAll();
     }
 }

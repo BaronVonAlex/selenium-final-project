@@ -1,11 +1,14 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
@@ -29,7 +32,13 @@ public class TestUtil {
             driver = new ChromeDriver(options);
         } else if (browser.equalsIgnoreCase("firefox")) {
             WebDriverManager.firefoxdriver().setup();
-            driver = new FirefoxDriver();
+
+            FirefoxOptions options = new FirefoxOptions();
+
+            // Set marionette capability to false
+            options.setCapability("marionette", true);
+
+            driver = new FirefoxDriver(options);
         } else if (browser.equalsIgnoreCase("edge")) {
             WebDriverManager.edgedriver().setup();
             driver = new EdgeDriver();
@@ -39,14 +48,17 @@ public class TestUtil {
         TestUtil.executor = (JavascriptExecutor) driver;
         TestUtil.softAssert = new SoftAssert();
         TestUtil.actions = new Actions(driver);
+        driver.get("https://www.swoop.ge/");
+        // accepts cookies
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='acceptCookie']"))).click();
     }
-//    @AfterTest
-//    public void doSoftAssert(){
-//        softAssert.assertAll();
-//    }
 
     @AfterClass
     public void tearDown(){
-        driver.close();
+        try{
+            softAssert.assertAll(getClass().toString());
+        }finally {
+            driver.close();
+        }
     }
 }

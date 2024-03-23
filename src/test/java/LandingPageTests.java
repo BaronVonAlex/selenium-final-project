@@ -6,10 +6,8 @@ import org.testng.annotations.Test;
 import ge.tbcitacademy.util.ColorUtil;
 
 public class LandingPageTests extends TestUtil{
-    @Test
+    @Test(priority = 5)
     public void activeCategoryTest() {
-        driver.get("https://www.swoop.ge/");
-
         WebElement categoryDDButton = driver.findElement(By.xpath("//p[@class='categoriesTitle']"));
         // click on category button
         categoryDDButton.click();
@@ -35,9 +33,8 @@ public class LandingPageTests extends TestUtil{
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(priority = 6)
     public void logoTest() {
-        driver.get("https://www.swoop.ge/");
         // Go to 'დასვენება' section.
         WebElement categoryRestButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='Menus']//a[@href='/category/24/dasveneba']")));
         categoryRestButton.click();
