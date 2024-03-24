@@ -1,3 +1,7 @@
+import ge.tbcitacademy.locators.HolidayPageLocators;
+import ge.tbcitacademy.page.HolidayPage;
+import ge.tbcitacademy.page.HomePage;
+import ge.tbcitacademy.page.LandingPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -21,6 +25,10 @@ public class TestUtil {
     protected static JavascriptExecutor executor;
     protected static SoftAssert softAssert;
     protected static Actions actions;
+    protected static LandingPage landingPage;
+    protected static HolidayPage holidayPage;
+    protected static HomePage homePage;
+    protected static HolidayPageLocators locators;
 
     @BeforeClass
     @Parameters("browser")
@@ -50,6 +58,14 @@ public class TestUtil {
         driver.get("https://www.swoop.ge/");
         // accepts cookies
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='acceptCookie']"))).click();
+    }
+
+    @BeforeMethod
+    public void setUpPages() {
+        landingPage = new LandingPage(driver);
+        holidayPage = new HolidayPage(driver, wait, executor);
+        homePage = new HomePage(driver);
+        locators = new HolidayPageLocators();
     }
 
     @AfterClass
