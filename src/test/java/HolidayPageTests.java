@@ -12,8 +12,9 @@ import java.util.List;
 
 public class HolidayPageTests extends TestUtil{
 
-    @Test(priority = 1)
+    @Test(priority = 3)
     public void descendingOrderTest() throws ElementClickInterceptedException {
+        executor.executeScript("window.scrollTo(0, 0);");
         // Go to 'დასვენება' section.
         WebElement categoryRestButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='Menus']//a[@href='/category/24/dasveneba']")));
         categoryRestButton.click();
@@ -66,18 +67,22 @@ public class HolidayPageTests extends TestUtil{
     }
 
     @Test(priority = 3)
-    public void filterTest(){
+    public void filterTest() {
         // scroll at the top of page to access Dropdown menu
         executor.executeScript("window.scrollTo(0, 0);");
         WebElement categoryRestButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='Menus']//a[@href='/category/24/dasveneba']")));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
         categoryRestButton.click();
 
         WebElement cottageCheckbox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='category-filter-desk']//label[contains(text(),'კოტეჯი')]/input")));
         cottageCheckbox.click();
-
+        // xpath expressions for my methods
         String cottageXpath = "//div[@class='special-offer-title']//a[contains(@href, 'koteji')]";
         String word = "koteji";
-
+        // scroll at the top of page to access Dropdown menu
+        executor.executeScript("window.scrollTop;");
+        // for firefox, we need to wait until loading (freeze div) disappears
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
         //sort offers from most expensive to least expensive.
         Select sortSelector = new Select(driver.findElement(By.id("sort")));
         sortSelector.getOptions();
@@ -99,7 +104,8 @@ public class HolidayPageTests extends TestUtil{
             softAssert.assertTrue(string.contains("koteji"), "String does not contain the word 'koteji': " + string + "[filterTest]");
         }
         // start from first page to collect offer prices.
-        driver.findElement(By.xpath("//a[@class='pagination__link']/img[@src='/Images/NewDesigneImg/categoryIn/arrows2-04.png']")).click();
+        WebElement firstPage = driver.findElement(By.xpath("//a[@class='pagination__link']/img[@src='/Images/NewDesigneImg/categoryIn/arrows2-04.png']"));
+        firstPage.click();
         // get all offer prices, filter them and turn into Double to perform actions
         List<Double> allOfferPrices = ItemListsUtil.fetchAllOfferPrices(driver,wait,offerPricesXpathExpression, nextPageElementXpathExpression);
         System.out.println("Least Expensive offer: " + Collections.min(allOfferPrices) + "₾");
@@ -107,30 +113,30 @@ public class HolidayPageTests extends TestUtil{
     }
 
     @Test(priority = 4)
-    public void priceRangeTest(){
+    public void priceRangeTest() {
         // scroll at the top of page to access Dropdown menu
         executor.executeScript("window.scrollTo(0, 0);");
         WebElement categoryRestButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='Menus']//a[@href='/category/24/dasveneba']")));
-        categoryRestButton.click();
 
-        WebElement minPriceInput = driver.findElement(By.xpath("//div[@class='category-filter-desk']//input[@name='minprice']"));
-        WebElement maxPriceInput = driver.findElement(By.xpath("//div[@class='category-filter-desk']//input[@name='maxprice']"));
-        WebElement submitButton = driver.findElement(By.xpath("//div[@class='category-filter-desk']//div[@class='submit-button']"));
+        executor.executeScript("arguments[0].click();", categoryRestButton);
 
-        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", minPriceInput);
+        WebElement submitButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='category-filter-desk']//div[@class='submit-button']")));
 
-        minPriceInput.click();
+        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", submitButton);
+
+        WebElement minPriceInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='category-filter-desk']//input[@name='minprice']")));
         minPriceInput.sendKeys("45");
 
-        maxPriceInput.click();
+        WebElement maxPriceInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='category-filter-desk']//input[@name='maxprice']")));
         maxPriceInput.sendKeys("55");
 
-        submitButton.click();
+        WebElement submitButtonUpdated = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='category-filter-desk']//div[@class='submit-button']")));
+        submitButtonUpdated.click();
 
         String offerPricesXpathExpression = "//div[@class='discounted-prices']/child::p[1]";
 
         DriverWaitUtil.applyWaitXpath(driver, wait, offerPricesXpathExpression);
-
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
         List<WebElement> offerPrices = driver.findElements(By.xpath(offerPricesXpathExpression));
         List<Double> offerFilteredPrices = ItemListsUtil.extractPrices(offerPrices);
         for(Double offer : offerFilteredPrices){

@@ -32,10 +32,8 @@ public class TestUtil {
             driver = new ChromeDriver(options);
         } else if (browser.equalsIgnoreCase("firefox")) {
             WebDriverManager.firefoxdriver().setup();
-
             FirefoxOptions options = new FirefoxOptions();
-
-            // Set marionette capability to false
+            // Set marionette capability
             options.setCapability("marionette", true);
 
             driver = new FirefoxDriver(options);
@@ -48,6 +46,7 @@ public class TestUtil {
         TestUtil.executor = (JavascriptExecutor) driver;
         TestUtil.softAssert = new SoftAssert();
         TestUtil.actions = new Actions(driver);
+
         driver.get("https://www.swoop.ge/");
         // accepts cookies
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='acceptCookie']"))).click();

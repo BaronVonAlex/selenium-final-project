@@ -1,4 +1,3 @@
-import ge.tbcitacademy.util.DriverWaitUtil;
 import ge.tbcitacademy.util.ItemListsUtil;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -59,6 +58,7 @@ public class MoviePageTests extends TestUtil{
         Assert.assertEquals(cinemaNamePopup.getText(), activeCinemaName);
         Assert.assertEquals(movieTitlePopup.getText(), movieNameString);
 
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
         WebElement vacantSeat = driver.findElement(By.xpath("//div[@class='seat free']"));
         vacantSeat.click();
 
