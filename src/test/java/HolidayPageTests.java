@@ -5,10 +5,12 @@ import org.testng.annotations.Test;
 import java.util.Collections;
 import java.util.List;
 
+import static ge.tbcitacademy.data.Constants.*;
+
 public class HolidayPageTests extends TestUtil{
 
     @Test(priority = 1)
-    public void descendingOrderTest() throws ElementClickInterceptedException, InterruptedException {
+    public void descendingOrderTest() throws ElementClickInterceptedException {
         executor.executeScript("window.scrollTo(0, 0);");
         // Go to 'დასვენება' section.
         landingPage.clickRestCategoryButton();
@@ -21,9 +23,9 @@ public class HolidayPageTests extends TestUtil{
         // get all offer prices
         List<Double> allOfferPrices = holidayPage.fetchAllOfferPrices();
 
-        System.out.println("Most expensive offer: " + Collections.max(allOfferPrices) + "₾");
+        System.out.println(MOST_EXPENSIVE_OFFER_MSG + Collections.max(allOfferPrices) + GEL_CURRENCY_SYMBOL);
 
-        softAssert.assertEquals(firstOfferPrice, Collections.max(allOfferPrices), "Most expensive offer is not displayed in : [descendingOrderTest]");
+        softAssert.assertEquals(firstOfferPrice, Collections.max(allOfferPrices), DESC_SOFT_ASSERT_FAIL_MSG);
     }
 
     @Test(priority = 2)
@@ -40,9 +42,9 @@ public class HolidayPageTests extends TestUtil{
         // get all offer prices
         List<Double> allOfferPrices = holidayPage.fetchAllOfferPrices();
 
-        System.out.println("Most expensive offer: " + Collections.min(allOfferPrices) + "₾");
+        System.out.println(LEAST_EXPENSIVE_OFFER_MSG + Collections.min(allOfferPrices) + GEL_CURRENCY_SYMBOL);
 
-        softAssert.assertEquals(firstOfferPrice, Collections.min(allOfferPrices), "Most cheapest offer is not displayed in : [ascendingOrderTest]");
+        softAssert.assertEquals(firstOfferPrice, Collections.min(allOfferPrices), ASC_SOFT_ASSERT_FAIL_MSG);
     }
 
     @Test(priority = 3)
@@ -70,14 +72,14 @@ public class HolidayPageTests extends TestUtil{
         List<String> allOffersContainWord = holidayPage.getAllOffersContainWord();
         // assert that all offers contain word
         for(String string : allOffersContainWord){
-            softAssert.assertTrue(string.contains("koteji"), "String does not contain the word 'koteji': " + string + "[filterTest]");
+            softAssert.assertTrue(string.contains(word), FILTER_TEST_ASSERT_FAIL_MSG + string + "[filterTest]");
         }
         // start from first page to collect offer prices.
         holidayPage.getToFirstPage();
         // get all offer prices, filter them and turn into Double to perform actions
         List<Double> allOfferPrices = holidayPage.fetchAllOfferPrices();
-        System.out.println("Least Expensive offer: " + Collections.min(allOfferPrices) + "₾");
-        softAssert.assertEquals(firstOfferPrice, Collections.min(allOfferPrices), "Least expensive offer is not displayed 1st in : [filterTest]");
+        System.out.println(LEAST_EXPENSIVE_OFFER_MSG + Collections.min(allOfferPrices) + GEL_CURRENCY_SYMBOL);
+        softAssert.assertEquals(firstOfferPrice, Collections.min(allOfferPrices), ASC_SOFT_ASSERT_FAIL_MSG);
     }
 
     @Test(priority = 4)
@@ -88,12 +90,12 @@ public class HolidayPageTests extends TestUtil{
         // scroll into View to select range.
         holidayPage.scrollIntoView();
         // Set price range
-        holidayPage.setPriceRange("45", "55");
+        holidayPage.setPriceRange(PRICE_RANGE_1, PRICE_RANGE_2);
         // Get offer prices within the range
         List<Double> offerPrices = holidayPage.getOfferPrices();
         // Assert that all offer prices are within the specified range
         for (Double offerPrice : offerPrices) {
-            softAssert.assertTrue(offerPrice >= 45 && offerPrice <= 55, "Offer price is not within the expected range: " + offerPrice);
+            softAssert.assertTrue(offerPrice >= 45 && offerPrice <= 55, PRICE_RANGE_ASSERT_FAIL_MSG + offerPrice);
         }
     }
 }

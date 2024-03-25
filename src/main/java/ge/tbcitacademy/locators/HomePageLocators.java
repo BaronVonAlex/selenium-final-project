@@ -1,0 +1,8 @@
+package ge.tbcitacademy.locators;
+
+import org.openqa.selenium.By;
+
+public class HomePageLocators {
+    public static final By CATEGORY_BUTTON_LOCATOR  = By.xpath("//p[@class='categoriesTitle']");
+    public static final By SWOOP_LOGO_LOCATOR = By.xpath("//a[@class='Newlogo']");
+}

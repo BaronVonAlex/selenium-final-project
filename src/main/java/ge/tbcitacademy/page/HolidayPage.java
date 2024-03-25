@@ -3,6 +3,7 @@ package ge.tbcitacademy.page;
 import ge.tbcitacademy.util.DriverWaitUtil;
 import ge.tbcitacademy.util.ItemListsUtil;
 import static ge.tbcitacademy.data.Constants.*;
+import static ge.tbcitacademy.locators.HolidayPageLocators.*;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -18,17 +19,6 @@ public class HolidayPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final JavascriptExecutor executor;
-    public final By SORT_SELECTOR_LOCATOR = By.id("sort");
-    public final By COTTAGE_CHECKBOX_LOCATOR = By.xpath("//div[@class='category-filter-desk']//label[contains(text(),'კოტეჯი')]/input");
-    public final By FIRST_PAGE_ELEMENT_LOCATOR = By.xpath("//a[@class='pagination__link']/img[@src='/Images/NewDesigneImg/categoryIn/arrows2-04.png']");
-    public final By SUBMIT_BUTTON_LOCATOR = By.xpath("//div[@class='category-filter-desk']//div[@class='submit-button']");
-    public final By MIN_PRICE_INPUT_LOCATOR = By.xpath("//div[@class='category-filter-desk']//input[@name='minprice']");
-    public final By MAX_PRICE_INPUT_LOCATOR = By.xpath("//div[@class='category-filter-desk']//input[@name='maxprice']");
-    public final By OFFER_PRICES_LOCATOR = By.xpath("//div[@class='discounted-prices']/child::p[1]");
-    public final String offerPricesXpathExpression = "//div[@class='discounted-prices']/child::p[1]";
-    public final String nextPageElementXpathExpression = "//a[@class='pagination__link']/img[@src='/Images/NewDesigneImg/categoryIn/arrow-01.png']";
-    public final String cottageXpathExpression = "//div[@class='special-offer-title']//a[contains(@href, 'koteji')]";
-
     // ascendingOrderTest and descendingOrderTest
     public HolidayPage(WebDriver driver, WebDriverWait wait, JavascriptExecutor executor) {
         this.driver = driver;

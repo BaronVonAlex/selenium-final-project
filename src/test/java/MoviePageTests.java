@@ -6,6 +6,8 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
+import static ge.tbcitacademy.data.Constants.*;
+
 public class MoviePageTests extends TestUtil{
     @Test(priority = 7)
     public void movieTest() throws ElementClickInterceptedException {
@@ -26,7 +28,7 @@ public class MoviePageTests extends TestUtil{
         // filter list into String list
         List<String> cinemaNames = ItemListsUtil.extractText(caveaSessions);
         for (String cinemaName : cinemaNames) {
-            Assert.assertEquals(cinemaName, "კავეა ისთ ფოინთი");
+            Assert.assertEquals(cinemaName, CINEMA_TARGET_NAME);
         }
         // click on last date
         List<WebElement> dateTabs = driver.findElements(By.xpath("//div[@aria-labelledby='ui-id-5']//li"));
@@ -66,18 +68,18 @@ public class MoviePageTests extends TestUtil{
         registerButton.click();
 
         // register with wrong email
-        driver.findElement(By.id("email")).sendKeys("wrong@com");
+        driver.findElement(By.id("email")).sendKeys(EMAIL);
         // password
-        driver.findElement(By.id("password")).sendKeys("Test!123123");
+        driver.findElement(By.id("password")).sendKeys(PASSWORD);
         // retype password
-        driver.findElement(By.id("PasswordRetype")).sendKeys("Test!123123");
+        driver.findElement(By.id("PasswordRetype")).sendKeys(PASSWORD_RETYPE);
         // div "radio" selector
         WebElement chooseGenderMale = driver.findElement(By.id("Gender1"));
         chooseGenderMale.click();
         // name
-        driver.findElement(By.id("name")).sendKeys("Alexandro");
+        driver.findElement(By.id("name")).sendKeys(NAME);
         // lastname
-        driver.findElement(By.id("surname")).sendKeys("Kotliarov");
+        driver.findElement(By.id("surname")).sendKeys(SURNAME);
         // date of birth
         WebElement birthdayBar = driver.findElement(By.xpath("//span[@class='select2-selection__placeholder']"));
         birthdayBar.click();
@@ -85,9 +87,9 @@ public class MoviePageTests extends TestUtil{
 
         birthdayYearSelector.click();
         // phone number
-        driver.findElement(By.id("Phone")).sendKeys("579347372");
+        driver.findElement(By.id("Phone")).sendKeys(PHONE);
         // phone code
-        driver.findElement(By.id("PhoneCode")).sendKeys("412652");
+        driver.findElement(By.id("PhoneCode")).sendKeys(PHONE_CODE);
         //register button -> scroll into view.
         WebElement registrationBtn = driver.findElement(By.id("registrationBtn"));
         executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", registrationBtn);
@@ -101,6 +103,6 @@ public class MoviePageTests extends TestUtil{
         // error message
         WebElement emailErrorMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-error-email")));
         String ErrorMessageText = emailErrorMsg.getText();
-        softAssert.assertEquals(ErrorMessageText, "ჩაწერე ელფოსტა");
+        softAssert.assertEquals(ErrorMessageText, MOVIE_ASSERT_EXPECTED_TEXT);
     }
 }

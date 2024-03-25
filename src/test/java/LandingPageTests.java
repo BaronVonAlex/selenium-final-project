@@ -1,5 +1,6 @@
-import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static ge.tbcitacademy.data.Constants.*;
 
 public class LandingPageTests extends TestUtil{
     @Test(priority = 5)
@@ -10,7 +11,7 @@ public class LandingPageTests extends TestUtil{
         landingPage.clickKartRacingButton();
         // validate URL
         softAssert.assertTrue(landingPage.isKartRacingPageUrlCorrect());
-        softAssert.assertEquals(landingPage.getKartElementColor(), "#6E7CFA");
+        softAssert.assertEquals(landingPage.getKartElementColor(), TARGET_COLOR);
     }
 
     @Test(priority = 6)
