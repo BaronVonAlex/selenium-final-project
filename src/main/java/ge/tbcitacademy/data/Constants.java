@@ -31,4 +31,15 @@ public class Constants {
     public static final String SWOOP_HOME_LINK = "https://www.swoop.ge/";
     public static final String SWOOP_GO_CART_LINK = "https://www.swoop.ge/category/2058/sporti/kartingi";
     public static final String CSS_VALUE_COLOR = "color";
+    // util
+    public static final String STALE_ELEMENT_REFERENCE_MSG = "StaleElementReferenceException occurred: ";
+    public static final String NUMBER_FORMAT_EXCEPTION_MSG = "NumberFormatException occurred: ";
+    public static final String ELEMENT_CLICK_INTERCEPTED_EXCEPTION_MSG = "ElementClickInterceptedException, No more pages.";
+    public static final String TOTAL_OFFERS_MSG = "Total number of offers found: ";
+    public static final String STALE_NEXT_PAGE_MSG = "StaleElementReferenceException occurred while extracting href. Skipping element.";
+    public static final String INTERCEPTED_NEXT_PAGE_MSG = "ElementClickInterceptedException Skipping element.";
+    public static final String HREF_TEXT = "href";
+    public static final String OFFER_WITH_HREF = "Offer with href ";
+    public static final String MISSING_TARGET_WORD_MSG = " does not contain the specified word.";
+    public static final String HEX_FORMAT = "#%02X%02X%02X";
 }

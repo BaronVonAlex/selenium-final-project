@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static ge.tbcitacademy.data.Constants.*;
+
 public class ItemListsUtil {
 
     public static List<Double> extractPrices(List<WebElement> elements) {
@@ -17,11 +19,11 @@ public class ItemListsUtil {
                         return Double.parseDouble(element.getText().replaceAll("[^0-9.]", ""));
                     } catch (StaleElementReferenceException e) {
                         // Handle StaleElementReferenceException here
-                        System.err.println("StaleElementReferenceException occurred: " + e.getMessage());
+                        System.err.println(STALE_ELEMENT_REFERENCE_MSG + e.getMessage());
                         return 0.0;
                     } catch (NumberFormatException e) {
                         // Handle NumberFormatException here
-                        System.err.println("NumberFormatException occurred: " + e.getMessage());
+                        System.err.println(NUMBER_FORMAT_EXCEPTION_MSG + e.getMessage());
                         return null;
                     }
                 })
@@ -36,7 +38,7 @@ public class ItemListsUtil {
                         return element.getText();
                     } catch (StaleElementReferenceException e) {
                         // Handle StaleElementReferenceException here
-                        System.err.println("StaleElementReferenceException occurred: " + e.getMessage());
+                        System.err.println(STALE_ELEMENT_REFERENCE_MSG + e.getMessage());
                         return null;
                     }
                 })
@@ -63,11 +65,11 @@ public class ItemListsUtil {
                     wait.until(ExpectedConditions.stalenessOf(offerElements.get(0)));
                 }
             } catch (ElementClickInterceptedException e) {
-                System.out.println("ElementClickInterceptedException, No more pages.");
+                System.out.println(ELEMENT_CLICK_INTERCEPTED_EXCEPTION_MSG);
                 break;
             }
         }
-        System.out.println("Total number of offers found: " + offerCount);
+        System.out.println(TOTAL_OFFERS_MSG + offerCount);
         return allOfferPrices;
     }
 
@@ -80,10 +82,10 @@ public class ItemListsUtil {
                 // Extract href values from current offers and add them to list
                 for (WebElement offer : currentOffers) {
                     try {
-                        String href = offer.getAttribute("href");
+                        String href = offer.getAttribute(HREF_TEXT);
                         offerUrls.add(href);
                     } catch (StaleElementReferenceException e) {
-                        System.err.println("StaleElementReferenceException occurred while extracting href. Skipping element.");
+                        System.err.println(STALE_NEXT_PAGE_MSG);
                     }
                 }
 
@@ -91,10 +93,10 @@ public class ItemListsUtil {
                 for (String href : offerUrls) {
                     try {
                         if (!href.contains(word)) {
-                            System.out.println("Offer with href " + href + " does not contain the specified word.");
+                            System.out.println(OFFER_WITH_HREF + href + MISSING_TARGET_WORD_MSG);
                         }
                     } catch (StaleElementReferenceException e) {
-                        System.err.println("StaleElementReferenceException occurred while checking href. Skipping element.");
+                        System.err.println(STALE_NEXT_PAGE_MSG);
                     }
                 }
                 // Check if there's a next page
@@ -105,7 +107,7 @@ public class ItemListsUtil {
                     wait.until(ExpectedConditions.stalenessOf(currentOffers.get(0)));
                 }
             } catch (ElementClickInterceptedException e) {
-                System.out.println("ElementClickInterceptedException, No more pages.");
+                System.out.println(INTERCEPTED_NEXT_PAGE_MSG);
                 break; // Break out of the loop if ElementClickInterceptedException occurs
             }
         }
