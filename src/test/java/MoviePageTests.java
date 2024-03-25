@@ -1,3 +1,4 @@
+import ge.tbcitacademy.page.MoviePage;
 import ge.tbcitacademy.util.ItemListsUtil;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -7,22 +8,17 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static ge.tbcitacademy.data.Constants.*;
+import static org.bouncycastle.cms.RecipientId.*;
 
 public class MoviePageTests extends TestUtil{
     @Test(priority = 7)
     public void movieTest() throws ElementClickInterceptedException {
-        WebElement movieEventButton = driver.findElement(By.xpath("//div[@class='Menus']//a[@href='/events']"));
-        movieEventButton.click();
-        WebElement firstMovieElement = driver.findElement(By.xpath("//div[@class='movies-deal'][1]/a"));
-        // hover mouse over movie to display buy option
-        actions.moveToElement(firstMovieElement).build().perform();
-        driver.findElement(By.xpath("//div[@class='movies-deal'][1]")).click();
-
-        // find Cavea option and check that only Cavea options are returned.
-        WebElement caveaButton = driver.findElement(By.xpath("//div[@class='container choose-seanse']//a[contains(text(),'კავეა ისთ ფოინ')]"));
-        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", caveaButton);
-        caveaButton.click();
-
+        // Go to 'კინო'
+        moviePage.navigateToMovieEvents();
+        // Select the first movie in the returned list and click on ‘ყიდვა’ button
+        moviePage.selectFirstMovie();
+        // scroll to Cavea
+        moviePage.chooseCaveaSession();
         // get list of cinemas
         List<WebElement> caveaSessions = driver.findElements(By.xpath("//div[@id='384933']//p[@class='cinema-title']"));
         // filter list into String list
@@ -44,6 +40,7 @@ public class MoviePageTests extends TestUtil{
         String[] movieDate =  lastDateString.split(" ");
         // name of the cinema
         String activeCinemaName = lastCinema.getText();
+
         // movie name before popup -> getText as String.
         WebElement movieName = driver.findElement(By.cssSelector("p.name"));
         String movieNameString = movieName.getText();
@@ -59,50 +56,14 @@ public class MoviePageTests extends TestUtil{
         Assert.assertEquals(movieDateLast[0], movieDate[0]);
         Assert.assertEquals(cinemaNamePopup.getText(), activeCinemaName);
         Assert.assertEquals(movieTitlePopup.getText(), movieNameString);
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
-        WebElement vacantSeat = driver.findElement(By.xpath("//div[@class='seat free']"));
-        vacantSeat.click();
-
-        WebElement registerButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(text(),'შექმენი')]")));
-        registerButton.click();
-
-        // register with wrong email
-        driver.findElement(By.id("email")).sendKeys(EMAIL);
-        // password
-        driver.findElement(By.id("password")).sendKeys(PASSWORD);
-        // retype password
-        driver.findElement(By.id("PasswordRetype")).sendKeys(PASSWORD_RETYPE);
-        // div "radio" selector
-        WebElement chooseGenderMale = driver.findElement(By.id("Gender1"));
-        chooseGenderMale.click();
-        // name
-        driver.findElement(By.id("name")).sendKeys(NAME);
-        // lastname
-        driver.findElement(By.id("surname")).sendKeys(SURNAME);
-        // date of birth
-        WebElement birthdayBar = driver.findElement(By.xpath("//span[@class='select2-selection__placeholder']"));
-        birthdayBar.click();
-        WebElement birthdayYearSelector = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), '2003')]")));
-
-        birthdayYearSelector.click();
-        // phone number
-        driver.findElement(By.id("Phone")).sendKeys(PHONE);
-        // phone code
-        driver.findElement(By.id("PhoneCode")).sendKeys(PHONE_CODE);
-        //register button -> scroll into view.
-        WebElement registrationBtn = driver.findElement(By.id("registrationBtn"));
-        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", registrationBtn);
-        // agree on website rules
-        WebElement checkbox1 = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='test']/following-sibling::span[1]")));
-        WebElement checkbox2 = driver.findElement(By.xpath("//input[@id='tbcAgreement']/following-sibling::span[1]"));
-        // using Javascript to force click on checkboxes due to some error
-        executor.executeScript("arguments[0].click();", checkbox2);
-        executor.executeScript("arguments[0].click();", checkbox1);
-        executor.executeScript("arguments[0].click();", registrationBtn);
+        //click on any vacant seat
+        moviePage.clickOnVacantSeat();
+        // go to registration tab
+        moviePage.clickOnRegisterButton();
+        // register but with wrong EMAIL
+        moviePage.registerWithWrongEmail(EMAIL, PASSWORD, PASSWORD_RETYPE, NAME, SURNAME, PHONE, PHONE_CODE);
         // error message
-        WebElement emailErrorMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-error-email")));
-        String ErrorMessageText = emailErrorMsg.getText();
+        String ErrorMessageText = moviePage.getEmailErrorTest();
         softAssert.assertEquals(ErrorMessageText, MOVIE_ASSERT_EXPECTED_TEXT);
     }
 }

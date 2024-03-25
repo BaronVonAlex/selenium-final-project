@@ -13,5 +13,4 @@ public class HolidayPageLocators {
     public static final String offerPricesXpathExpression = "//div[@class='discounted-prices']/child::p[1]";
     public static final String nextPageElementXpathExpression = "//a[@class='pagination__link']/img[@src='/Images/NewDesigneImg/categoryIn/arrow-01.png']";
     public static final String cottageXpathExpression = "//div[@class='special-offer-title']//a[contains(@href, 'koteji')]";
-
 }

@@ -45,6 +45,7 @@ public class HolidayPage {
     }
 
     public double getFirstOfferPrice(){
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
         WebElement expensiveOfferPriceElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(offerPricesXpathExpression)));
         String expensivePriceText = expensiveOfferPriceElement.getText().replaceAll("[^0-9.]", "");
         return Double.parseDouble(expensivePriceText);

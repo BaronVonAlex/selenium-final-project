@@ -2,6 +2,7 @@ import ge.tbcitacademy.locators.HolidayPageLocators;
 import ge.tbcitacademy.page.HolidayPage;
 import ge.tbcitacademy.page.HomePage;
 import ge.tbcitacademy.page.LandingPage;
+import ge.tbcitacademy.page.MoviePage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -28,7 +29,8 @@ public class TestUtil {
     protected static LandingPage landingPage;
     protected static HolidayPage holidayPage;
     protected static HomePage homePage;
-    protected static HolidayPageLocators locators;
+    protected static MoviePage moviePage;
+
 
     @BeforeClass
     @Parameters("browser")
@@ -64,8 +66,8 @@ public class TestUtil {
     public void setUpPages() {
         landingPage = new LandingPage(driver);
         holidayPage = new HolidayPage(driver, wait, executor);
+        moviePage = new MoviePage(driver, actions, executor, wait);
         homePage = new HomePage(driver);
-        locators = new HolidayPageLocators();
     }
 
     @AfterClass

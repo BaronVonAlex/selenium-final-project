@@ -2,59 +2,89 @@ package ge.tbcitacademy.page;
 
 import org.openqa.selenium.By;
 
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static ge.tbcitacademy.locators.HomePageLocators.*;
+import static ge.tbcitacademy.locators.MoviePageLocators.*;
+
 public class MoviePage {
-    public static final By MOVIE_EVENT_LOCATOR = By.xpath("//div[@class='Menus']//a[@href='/events']");
-    public static final By FIRST_MOVIE_LOCATOR = By.xpath("//div[@class='movies-deal'][1]/a");
-    public static final By BUY_MOVIE_LOCATOR = By.xpath("//div[@class='movies-deal'][1]");
-    public static final By CAVEA_BUTTON_LOCATOR = By.xpath("//div[@class='container choose-seanse']//a[contains(text(),'კავეა ისთ ფოინ')]");
-    public static final By CAVEA_SESSIONS_LOCATOR = By.xpath("//div[@id='384933']//p[@class='cinema-title']");
-    public static final By DATE_TABS_LOCATOR = By.xpath("//div[@aria-labelledby='ui-id-5']//li");
-    public static final By MOVIE_NAME_LOCATOR = By.cssSelector("p.name");
-    public static final By MOVIE_TITLE_POPUP_LOCATOR = By.cssSelector("p.movie-title");
-    public static final By CINEMA_NAME_POPUP_LOCATOR = By.cssSelector("p.movie-title");
-    public static final By MOVIE_DATE_POPUP_LOCATOR = By.cssSelector("p.movie-title");
-    public static final By VACANT_SEAT_LOCATOR = By.xpath("//div[@class='seat free']");
-    public static final By REGISTER_BUTTON_LOCATOR = By.xpath("//a[contains(text(),'შექმენი')]");
 
-    // Email input locator
-    public static final By EMAIL_INPUT = By.id("email");
+    private final WebDriver driver;
+    private final JavascriptExecutor executor;
+    private final Actions actions;
+    private final WebDriverWait wait;
 
-    // Password input locator
-    public static final By PASSWORD_INPUT = By.id("password");
+    public MoviePage(WebDriver driver, Actions actions, JavascriptExecutor executor, WebDriverWait wait) {
+        this.driver = driver;
+        this.executor = executor;
+        this.actions = actions;
+        this.wait = wait;
+    }
+    // Go to 'კინო'
+    public void navigateToMovieEvents() {
+        driver.findElement(MOVIE_EVENT_LOCATOR).click();
+    }
+    // Select the first movie in the returned list and click on ‘ყიდვა’ button
+    public void selectFirstMovie() {
+        WebElement firstMovieElement = driver.findElement(FIRST_MOVIE_LOCATOR);
+        actions.moveToElement(firstMovieElement).build().perform();
+        driver.findElement(BUY_MOVIE_LOCATOR).click();
+    }
+    // scroll to Cavea
+    public void chooseCaveaSession() {
+        WebElement caveaButton = driver.findElement(CAVEA_BUTTON_LOCATOR);
+        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", caveaButton);
+        caveaButton.click();
+    }
 
-    // Retype Password input locator
-    public static final By PASSWORD_RETYPE_INPUT = By.id("PasswordRetype");
+    public void clickOnVacantSeat(){
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
+        driver.findElement(VACANT_SEAT_LOCATOR).click();
+    }
+    public void clickOnRegisterButton(){
+        driver.findElement(REGISTER_BUTTON_LOCATOR).click();
+    }
 
-    // Gender Male radio button locator
-    public static final By GENDER_MALE_RADIO = By.id("Gender1");
+    public void registerWithWrongEmail(String email, String password, String retypedPassword, String name, String surname, String phone, String phoneCode) {
+        driver.findElement(EMAIL_INPUT).sendKeys(email);
+        driver.findElement(PASSWORD_INPUT).sendKeys(password);
+        driver.findElement(PASSWORD_RETYPE_INPUT).sendKeys(retypedPassword);
 
-    // Name input locator
-    public static final By NAME_INPUT = By.id("name");
+        WebElement chooseGenderMale = driver.findElement(GENDER_MALE_RADIO);
+        chooseGenderMale.click();
 
-    // Surname input locator
-    public static final By SURNAME_INPUT = By.id("surname");
+        driver.findElement(NAME_INPUT).sendKeys(name);
+        driver.findElement(SURNAME_INPUT).sendKeys(surname);
 
-    // Birthday dropdown locator
-    public static final By BIRTHDAY_DROPDOWN = By.xpath("//span[@class='select2-selection__placeholder']");
+        WebElement birthdayBar = driver.findElement(BIRTHDAY_DROPDOWN);
+        birthdayBar.click();
+        WebElement birthdayYearSelector = wait.until(ExpectedConditions.visibilityOfElementLocated(BIRTHDAY_YEAR_OPTION));
+        birthdayYearSelector.click();
 
-    // Year in Birthday dropdown locator
-    public static final By BIRTHDAY_YEAR_OPTION = By.xpath("//li[contains(text(), '2003')]");
+        driver.findElement(PHONE_NUMBER_INPUT).sendKeys(phone);
+        driver.findElement(PHONE_CODE_INPUT).sendKeys(phoneCode);
 
-    // Phone number input locator
-    public static final By PHONE_NUMBER_INPUT = By.id("Phone");
+        WebElement registrationBtn = driver.findElement(REGISTRATION_BUTTON);
+        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", registrationBtn);
 
-    // Phone code input locator
-    public static final By PHONE_CODE_INPUT = By.id("PhoneCode");
+        WebElement checkbox1 = wait.until(ExpectedConditions.elementToBeClickable(CHECKBOX_1));
+        WebElement checkbox2 = driver.findElement(CHECKBOX_2);
 
-    // Registration button locator
-    public static final By REGISTRATION_BUTTON = By.id("registrationBtn");
+        executor.executeScript("arguments[0].click();", checkbox2);
+        executor.executeScript("arguments[0].click();", checkbox1);
+        executor.executeScript("arguments[0].click();", registrationBtn);
+    }
+    public String getEmailErrorTest(){
+        WebElement emailErrorMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(EMAIL_ERROR_MESSAGE));
+        return emailErrorMsg.getText();
+    }
 
-    // Checkbox 1 locator
-    public static final By CHECKBOX_1 = By.xpath("//input[@id='test']/following-sibling::span[1]");
-
-    // Checkbox 2 locator
-    public static final By CHECKBOX_2 = By.xpath("//input[@id='tbcAgreement']/following-sibling::span[1]");
-
-    // Email error message locator
-    public static final By EMAIL_ERROR_MESSAGE = By.id("input-error-email");
+    public void waitForFreezeDiv(){
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(FREEZE_DIV_WAIT));
+    }
 }
