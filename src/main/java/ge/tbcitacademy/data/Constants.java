@@ -25,4 +25,10 @@ public class Constants {
     public static final String PHONE_CODE = "412652";
     public static final String MOVIE_ASSERT_EXPECTED_TEXT = "მეილის ფორმატი არასწორია!";
     public static final String FILTER_TEST_NAME = "[filterTest]";
+    public static final String JS_SCROLL_TOP = "window.scrollTo(0, 0);";
+    public static final String JS_CLICK = "arguments[0].click();";
+    public static final String JS_SCROLL_MIDDLE = "arguments[0].scrollIntoView({block: 'center'});";
+    public static final String SWOOP_HOME_LINK = "https://www.swoop.ge/";
+    public static final String SWOOP_GO_CART_LINK = "https://www.swoop.ge/category/2058/sporti/kartingi";
+    public static final String CSS_VALUE_COLOR = "color";
 }

@@ -31,7 +31,7 @@ public class MoviePageTests extends TestUtil{
         // click on last movie option
         WebElement lastCinema = caveaSessions.get(caveaSessions.size() - 1);
         // scroll into view of last cinema element and click
-        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", lastCinema);
+        executor.executeScript(JS_SCROLL_MIDDLE, lastCinema);
         lastCinema.click();
         // movie date, separate date and time
         String lastDateString = lastDate.getText();

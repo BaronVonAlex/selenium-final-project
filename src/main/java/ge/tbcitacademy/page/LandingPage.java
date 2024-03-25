@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import static ge.tbcitacademy.data.Constants.*;
 import static ge.tbcitacademy.locators.LandingPageLocators.*;
 
 public class LandingPage {
@@ -25,12 +26,12 @@ public class LandingPage {
     }
 
     public boolean isKartRacingPageUrlCorrect() {
-        return driver.getCurrentUrl().equals("https://www.swoop.ge/category/2058/sporti/kartingi");
+        return driver.getCurrentUrl().equals(SWOOP_GO_CART_LINK);
     }
 
     public String getKartElementColor() {
         WebElement kartRacingElement = driver.findElement(kartRacingElementLocator);
-        String kartElementColor = kartRacingElement.getCssValue("color");
+        String kartElementColor = kartRacingElement.getCssValue(CSS_VALUE_COLOR);
         return ColorUtil.rgbToHex(kartElementColor);
     }
     public void clickRestCategoryButton() {

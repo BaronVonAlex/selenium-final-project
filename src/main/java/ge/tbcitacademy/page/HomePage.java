@@ -2,6 +2,7 @@ package ge.tbcitacademy.page;
 
 import org.openqa.selenium.WebDriver;
 
+import static ge.tbcitacademy.data.Constants.*;
 import static ge.tbcitacademy.locators.HomePageLocators.*;
 
 public class HomePage {
@@ -20,6 +21,6 @@ public class HomePage {
     }
 
     public boolean isHomePageUrlCorrect() {
-        return driver.getCurrentUrl().equals("https://www.swoop.ge/");
+        return driver.getCurrentUrl().equals(SWOOP_HOME_LINK);
     }
 }

@@ -65,12 +65,12 @@ public class HolidayPage {
 
     // priceRangeTest
     public void scrollToTop() {
-        executor.executeScript("window.scrollTo(0, 0);");
+        executor.executeScript(JS_SCROLL_TOP);
     }
 
     public void scrollIntoView() {
         WebElement minPriceInput = driver.findElement(MIN_PRICE_INPUT_LOCATOR);
-        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", minPriceInput);
+        executor.executeScript(JS_SCROLL_MIDDLE, minPriceInput);
     }
 
     public void setPriceRange(String minPrice, String maxPrice) {

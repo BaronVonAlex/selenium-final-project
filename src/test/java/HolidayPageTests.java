@@ -9,7 +9,7 @@ public class HolidayPageTests extends TestUtil{
 
     @Test(priority = 1)
     public void descendingOrderTest() throws ElementClickInterceptedException {
-        executor.executeScript("window.scrollTo(0, 0);");
+        executor.executeScript(JS_SCROLL_TOP);
         // Go to 'დასვენება' section.
         landingPage.clickRestCategoryButton();
 
@@ -28,7 +28,7 @@ public class HolidayPageTests extends TestUtil{
 
     @Test(priority = 2)
     public void ascendingOrderTest() {
-        executor.executeScript("window.scrollTo(0, 0);");
+        executor.executeScript(JS_SCROLL_TOP);
         // Go to 'დასვენება' section.
         landingPage.clickRestCategoryButton();
 
@@ -48,7 +48,7 @@ public class HolidayPageTests extends TestUtil{
     @Test(priority = 3)
     public void filterTest() {
         // scroll at the top of page to access Dropdown menu
-        executor.executeScript("window.scrollTo(0, 0);");
+        executor.executeScript(JS_SCROLL_TOP);
 
         moviePage.waitForFreezeDiv();
         // go to დასვენება
@@ -57,7 +57,7 @@ public class HolidayPageTests extends TestUtil{
         moviePage.waitForFreezeDiv();
         holidayPage.clickCottageCheckbox();
         // scroll at the top of page to access Dropdown menu
-        executor.executeScript("window.scrollTo(0, 0);");
+        executor.executeScript(JS_SCROLL_TOP);
         // for firefox, we need to wait until loading (freeze div) disappears
         moviePage.waitForFreezeDiv();
         //sort offers from most expensive to least expensive.

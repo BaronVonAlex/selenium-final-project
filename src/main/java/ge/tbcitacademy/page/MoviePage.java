@@ -9,6 +9,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static ge.tbcitacademy.data.Constants.*;
 import static ge.tbcitacademy.locators.HomePageLocators.*;
 import static ge.tbcitacademy.locators.MoviePageLocators.*;
 
@@ -38,7 +39,7 @@ public class MoviePage {
     // scroll to Cavea
     public void chooseCaveaSession() {
         WebElement caveaButton = driver.findElement(CAVEA_BUTTON_LOCATOR);
-        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", caveaButton);
+        executor.executeScript(JS_SCROLL_MIDDLE, caveaButton);
         caveaButton.click();
     }
 
@@ -70,14 +71,14 @@ public class MoviePage {
         driver.findElement(PHONE_CODE_INPUT).sendKeys(phoneCode);
 
         WebElement registrationBtn = driver.findElement(REGISTRATION_BUTTON);
-        executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", registrationBtn);
+        executor.executeScript(JS_SCROLL_MIDDLE, registrationBtn);
 
         WebElement checkbox1 = wait.until(ExpectedConditions.elementToBeClickable(CHECKBOX_1));
         WebElement checkbox2 = driver.findElement(CHECKBOX_2);
 
-        executor.executeScript("arguments[0].click();", checkbox2);
-        executor.executeScript("arguments[0].click();", checkbox1);
-        executor.executeScript("arguments[0].click();", registrationBtn);
+        executor.executeScript(JS_CLICK, checkbox2);
+        executor.executeScript(JS_CLICK, checkbox1);
+        executor.executeScript(JS_CLICK, registrationBtn);
     }
     public String getEmailErrorTest(){
         WebElement emailErrorMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(EMAIL_ERROR_MESSAGE));
