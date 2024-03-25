@@ -1,4 +1,3 @@
-import ge.tbcitacademy.locators.HolidayPageLocators;
 import ge.tbcitacademy.page.HolidayPage;
 import ge.tbcitacademy.page.HomePage;
 import ge.tbcitacademy.page.LandingPage;

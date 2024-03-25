@@ -1,6 +1,4 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +13,7 @@ public class HolidayPageTests extends TestUtil{
         // Go to 'დასვენება' section.
         landingPage.clickRestCategoryButton();
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
+        moviePage.waitForFreezeDiv();
         // sort offers from most expensive to least expensive on the website.
         holidayPage.sortByMostExpensive();
         // get first offer price
@@ -34,7 +32,7 @@ public class HolidayPageTests extends TestUtil{
         // Go to 'დასვენება' section.
         landingPage.clickRestCategoryButton();
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
+        moviePage.waitForFreezeDiv();
         // sort offers from most expensive to least expensive on the website.
         holidayPage.sortByMostCheap();
         // get first offer price
@@ -52,16 +50,16 @@ public class HolidayPageTests extends TestUtil{
         // scroll at the top of page to access Dropdown menu
         executor.executeScript("window.scrollTo(0, 0);");
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
+        moviePage.waitForFreezeDiv();
         // go to დასვენება
         landingPage.clickRestCategoryButton();
         // select cottages on sidebar
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
+        moviePage.waitForFreezeDiv();
         holidayPage.clickCottageCheckbox();
         // scroll at the top of page to access Dropdown menu
         executor.executeScript("window.scrollTo(0, 0);");
         // for firefox, we need to wait until loading (freeze div) disappears
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='freeze']")));
+        moviePage.waitForFreezeDiv();
         //sort offers from most expensive to least expensive.
         holidayPage.sortByMostCheap();
 
@@ -72,7 +70,7 @@ public class HolidayPageTests extends TestUtil{
         List<String> allOffersContainWord = holidayPage.getAllOffersContainWord();
         // assert that all offers contain word
         for(String string : allOffersContainWord){
-            softAssert.assertTrue(string.contains(word), FILTER_TEST_ASSERT_FAIL_MSG + string + "[filterTest]");
+            softAssert.assertTrue(string.contains(word), FILTER_TEST_ASSERT_FAIL_MSG + string + FILTER_TEST_NAME);
         }
         // start from first page to collect offer prices.
         holidayPage.getToFirstPage();

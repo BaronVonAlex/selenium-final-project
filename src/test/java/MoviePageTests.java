@@ -1,4 +1,3 @@
-import ge.tbcitacademy.page.MoviePage;
 import ge.tbcitacademy.util.ItemListsUtil;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -8,7 +7,6 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static ge.tbcitacademy.data.Constants.*;
-import static org.bouncycastle.cms.RecipientId.*;
 
 public class MoviePageTests extends TestUtil{
     @Test(priority = 7)

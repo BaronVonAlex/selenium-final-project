@@ -24,4 +24,5 @@ public class Constants {
     public static final String PHONE = "579347372";
     public static final String PHONE_CODE = "412652";
     public static final String MOVIE_ASSERT_EXPECTED_TEXT = "ჩაწერე ელფოსტა";
+    public static final String FILTER_TEST_NAME = "[filterTest]";
 }
